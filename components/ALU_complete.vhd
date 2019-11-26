@@ -12,3 +12,10 @@ entity ALU_complete is
         erg             : out std_logic_vector(31 downto 0)
     ); 
 end ALU_complete;
+
+architecture structure of ALU_complete is   
+    signal mux_out          : std_logic;
+    signal alu_cntrl_out    : std_logic_vector(3 downto 0);
+    begin
+        
+end architecture;
