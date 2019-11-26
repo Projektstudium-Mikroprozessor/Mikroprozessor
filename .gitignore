@@ -1,0 +1,16 @@
+#folders 
+db/
+incremental_db
+output_files
+simulation/
+
+#files 
+*.bak
+*.qpf
+*.qsf
+*.qws
+*.sft
+*.vho
+*.sdo
+*.xrf
+*.vwf
