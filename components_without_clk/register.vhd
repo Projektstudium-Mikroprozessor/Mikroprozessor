@@ -9,7 +9,8 @@ entity reg is
         data_in     : in std_logic_vector(31 downto 0);
         read_addr1  : in std_logic_vector(4 downto 0);
         read_addr2  : in std_logic_vector(4 downto 0);
-        write_addr  : in std_logic_vector(4 downto 0);
+        addr3       : in std_logic_vector(4 downto 0);
+        reg_dst     : in std_logic;
         -- outputs
         data_out1   : out std_logic_vector(31 downto 0);        
         data_out2   : out std_logic_vector(31 downto 0)
@@ -24,8 +25,17 @@ architecture reg_behav of reg is
     -- signal mit typ registersatz erstellen
     signal regis : regi_collection := (others=> (others =>'0'));
 
+    signal write_addr : std_logic_vector(4 downto 0);
+
     begin
-       
+        process(reg_dst) begin
+            if reg_dst = '0' then
+                write_addr <= read_addr2;
+            else 
+                write_addr <= addr3;
+            end if;
+        end process;
+        
         process(mem_write, data_in, write_addr) begin
             if(mem_write = '1') then
                 -- in Register, mit Adresse == Index im Vektor, schreiben
