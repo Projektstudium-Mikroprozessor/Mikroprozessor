@@ -4,13 +4,13 @@ use IEEE.numeric_std.all;
 
 entity ALU_complete is 
     port (
-        clk_external    : in std_logic;
         ALUscr          : in std_logic;
         ALUOp           : in std_logic_vector(1 downto 0);
         daten1          : in std_logic_vector(31 downto 0);
         daten2          : in std_logic_vector(31 downto 0);
-        vz_erweiterung  : in std_logic_vector(31 downto 0);
+        offset          : in std_logic_vector(15 downto 0);
         func_external   : in std_logic_vector(5 downto 0);
+
         zero_out        : out std_logic;
         erg             : out std_logic_vector(31 downto 0)
     ); 
@@ -19,22 +19,26 @@ end ALU_complete;
 architecture structure of ALU_complete is   
     signal mux_out          : std_logic_vector(31 downto 0);
     signal alu_cntrl_out    : std_logic_vector(3 downto 0);
+    signal vz_erweitert     : std_logic_vector(31 downto 0);
+
     begin
-        mux_alu     :   entity work.mux port map(
-            clk => clk_external,
+        vz_erweiterer : entity work.vz_erweiterung port map(
+            offset => offset,
+            offset_shifted => vz_erweitert
+        );
+        mux_alu : entity work.mux port map(
             e0 => daten2,
-            e1 => vz_erweiterung,
+            e1 => vz_erweitert,
             s => ALUscr,
             a => mux_out
         );
-        ALU_cntrl   :   entity work.ALU_cntrl port map(
+        ALU_cntrl : entity work.ALU_cntrl port map(
             func => func_external,
             ALUOp1 => ALUOp(1),
             ALUOp0 => ALUOp(0),
             Op => alu_cntrl_out
         );
-        ALU         :   entity work.alu port map (
-            clk => clk_external,
+        ALU : entity work.alu port map (
             input_1 => daten1, 
             input_2 => mux_out,
             input_1_inv => alu_cntrl_out(3),
