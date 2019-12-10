@@ -20,6 +20,7 @@ architecture behav_testbench_first_prototype of testbench_first_prototype is
 
     component reg is
         port (
+	    clk	       : in std_logic;
             mem_write  : in std_logic;
             data_in    : in std_logic_vector(31 downto 0);
             read_addr1 : in std_logic_vector(4 downto 0);
@@ -63,9 +64,10 @@ architecture behav_testbench_first_prototype of testbench_first_prototype is
 
     component data_mem is 
 	port (
+	    clk	     : in std_logic;
 	    MemRW    : in std_logic;
 	    Mem2Reg  : in std_logic;
-	    addr     : in std_logic_vector(31 downto 0);
+	    alu_out  : in std_logic_vector(31 downto 0);
 	    data_in  : in std_logic_vector(31 downto 0);
 
 	    data_out : out std_logic_vector(31 downto 0)
@@ -121,6 +123,7 @@ begin
     );
 
     Register_mapping: reg port map (
+	clk	   => s_clk,
 	mem_write  => s_RegRW,
 	data_in    => s_mem_data_out,
 	read_addr1 => s_instruction(25 downto 21),
@@ -145,9 +148,10 @@ begin
     );
 
     data_memory: data_mem port map (
+	clk      => s_clk,
 	MemRW    => s_MemRW,
 	Mem2Reg  => s_Mem2Reg,
-	addr     => s_erg,
+	alu_out  => s_erg,
 	data_in  => s_reg_data_out2,
 	
 	data_out => s_mem_data_out

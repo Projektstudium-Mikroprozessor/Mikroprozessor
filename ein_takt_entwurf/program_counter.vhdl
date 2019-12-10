@@ -23,7 +23,7 @@ begin
 
             if (Branch='1' and Zero='1') then
 
-       	        pc_internal := pc_internal + to_integer(signed(offset)); -- add offset to pc
+       	        pc_internal := pc_internal + (to_integer(signed(offset)*4)); -- add offset to pc
 	    
 	    end if;
 
