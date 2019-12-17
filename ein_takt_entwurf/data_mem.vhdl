@@ -1,6 +1,8 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
+use STD.textio.all;
+use IEEE.std_logic_textio.all;
 
 entity data_mem is
     port (
@@ -20,10 +22,29 @@ architecture data_mem_behav of data_mem is
     -- type storage defined as array of Bytes
     type storage is array(0 to 2**20) of mem_word;
     -- initialize mem of type storage
-    signal mem : storage := (
-	0 => (others => '1'),
-	2 => (others => '1'),
-	others => (others => '0'));
+   
+    impure function init_data_mem return storage is
+	file text_file       : text;
+	variable text_line   : line;
+	variable machinecode : std_logic_vector(31 downto 0);
+	variable mem_content : storage := (others => (others => '0'));
+	variable i           : integer := 0;
+    begin
+	file_open(text_file, "C:\Massenspeicher\Studium\Semester 5\Projekt Chipdesign\Chipdesign\fibonacci_memory.txt", read_mode);
+	while not endfile(text_file) loop
+	    readline(text_file, text_line);
+	    read(text_line, machinecode);
+	    mem_content(i)   := machinecode(31 downto 24);
+	    mem_content(i+1) := machinecode(23 downto 16);
+	    mem_content(i+2) := machinecode(15 downto 8);
+	    mem_content(i+3) := machinecode(7 downto 0);
+	    i := i+4;
+	end loop;
+
+	return mem_content;
+    end function;
+	
+    signal mem : storage := init_data_mem;
 begin
     process(clk, Mem2Reg, MemRW, alu_out, data_in)
 	variable idx  : integer := 0;	-- index as integer

@@ -25,7 +25,7 @@ architecture instruction_behav of instruction_mem is
 	variable mem_content : storage := (others => (others => '0'));
 	variable i           : integer := 0;
     begin
-	file_open(text_file, "D:/Studium/Semester 5/Projekt Chipdesign/Mikroprozessor/ein_takt_entwurf/instructions.txt", read_mode);
+	file_open(text_file, "C:\Massenspeicher\Studium\Semester 5\Projekt Chipdesign\Chipdesign\fibonacci_instructions.txt", read_mode);
 	while not endfile(text_file) loop
 	    readline(text_file, text_line);
 	    read(text_line, machinecode);
