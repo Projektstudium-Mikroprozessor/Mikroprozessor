@@ -5,7 +5,7 @@ use IEEE.numeric_std.all;
 entity reg is 
     port (
         -- inputs
-	    clk	    : in std_logic;
+	clk	    : in std_logic;
         mem_write   : in std_logic;
         data_in     : in std_logic_vector(31 downto 0);
         read_addr1  : in std_logic_vector(4 downto 0);

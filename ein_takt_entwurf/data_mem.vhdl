@@ -7,7 +7,7 @@ use IEEE.std_logic_textio.all;
 entity data_mem is
     port (
 	clk 	 : in std_logic;
-        MemRW    : in std_logic;
+    MemRW    : in std_logic;
 	Mem2Reg  : in std_logic;
 	alu_out  : in std_logic_vector(31 downto 0);
 	data_in  : in std_logic_vector(31 downto 0);
