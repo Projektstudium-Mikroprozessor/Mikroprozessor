@@ -1,16 +1,11 @@
-#folders 
-db/
-incremental_db
-output_files
-simulation/
+# VSCode
+.vscode/
 
-#files 
+# ModelSim
+work/
+*.vstf
+*.ini
+*.opt
 *.bak
-*.qpf
-*.qsf
-*.qws
-*.sft
-*.vho
-*.sdo
-*.xrf
-*.vwf
+*.wlf
+wlft*
