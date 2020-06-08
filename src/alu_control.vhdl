@@ -2,16 +2,16 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.ALL;
 USE ieee.numeric_std.ALL;
+USE work.definitions.ALL;
 
 ENTITY alu_control IS
 	PORT (
 		-- inputs
-		cntrl_op: IN std_logic_vector(1 DOWNTO 0);
-		func: IN std_logic_vector(3 DOWNTO 0);
+		cntrl_op	: IN basic_operation;			-- control operation
+		func		: IN std_logic_vector(3 DOWNTO 0);	-- function specifier
 		
 		-- outputs
-		op: OUT std_logic_vector(2 DOWNTO 0);
-		a_inv, b_neg: OUT std_logic	
+		op 		: OUT operation				-- operation
 	);
 END alu_control;
 
@@ -19,55 +19,23 @@ ARCHITECTURE behavioural OF alu_control IS
 BEGIN
 	PROCESS (cntrl_op, func)
 	BEGIN
-		IF (cntrl_op = "00") THEN		-- address calculation
-			op <= "010";
-			a_inv <= '0';
-			b_neg <= '0';
-		ELSIF (cntrl_op = "01") THEN		-- compare
-			op <= "010";
-			a_inv <= '0';
-			b_neg <= '1';
-		ELSIF (cntrl_op = "10") THEN		-- arithmetic / logic
-			-- bit 0+2: op, 1: b_neg, 3: a_inv, 2+3: shifts
-			IF (func = "0000") THEN			-- add
-				op <= "010";
-				a_inv <= '0';
-				b_neg <= '0';
-			ELSIF (func = "0010") THEN		-- sub
-				op <= "010";
-				a_inv <= '0';
-				b_neg <= '1';
-
-			ELSIF (func = "0100") THEN		-- and
-				op <= "000";
-				a_inv <= '0';
-				b_neg <= '0';
-			ELSIF (func = "0101") THEN		-- or
-				op <= "001";
-				a_inv <= '0';
-				b_neg <= '0';
-			ELSIF (func = "1011") THEN		-- nand
-				op <= "001";
-				a_inv <= '1';
-				b_neg <= '1';
-			ELSIF (func = "1010") THEN		-- nor
-				op <= "000";
-				a_inv <= '1';
-				b_neg <= '1';
-
-			ELSIF (func = "1100") THEN		-- shl
-				op <= "100";
-				a_inv <= '0';
-				b_neg <= '0';
-			ELSIF (func = "1110") THEN		-- slr
-				op <= "110";
-				a_inv <= '0';
-				b_neg <= '0';
-			ELSIF (func = "1111") THEN		-- sar
-				op <= "111";
-				a_inv <= '0';
-				b_neg <= '0';
-			END IF;
-		END IF;
+		CASE cntrl_op IS
+			WHEN "00" => op <= "01000";			-- address calculation
+			WHEN "01" => op <= "01001";			-- compare
+			WHEN "10" =>					-- arithmetic / logic
+				CASE func IS 				-- bit 0+2: op, 1: b_neg, 3: a_inv, 2+3: shifts
+					WHEN "0000" => op <= "01000";	-- add
+					WHEN "0010" => op <= "01001";	-- sub
+					WHEN "0100" => op <= "00000";	-- and
+					WHEN "0101" => op <= "00100";	-- or
+					WHEN "1011" => op <= "00111";	-- nand
+					WHEN "1010" => op <= "00011";	-- nor
+					WHEN "1100" => op <= "10000";	-- shl
+					WHEN "1110" => op <= "11000";	-- shr
+					WHEN "1111" => op <= "11100";	-- sar
+					WHEN OTHERS => op <= (OTHERS => '1');
+				END CASE;
+			WHEN OTHERS => op <= (OTHERS => '1');
+		END CASE;
 	END PROCESS;
 END behavioural;

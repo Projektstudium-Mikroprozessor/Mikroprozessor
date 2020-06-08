@@ -2,18 +2,26 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.ALL;
 USE ieee.numeric_std.ALL;
+USE work.definitions.ALL;
 
 ENTITY ucontroller IS
 	PORT (
 		-- control signals
-		clk, rst: IN std_logic
+		clk	: IN std_logic;	-- clock
+		rst	: IN std_logic -- reset
 	);
 END ucontroller;
 
 ARCHITECTURE structural OF ucontroller IS
 
-	SIGNAL data_rw: std_logic;
-	SIGNAL instr, data, instr_addr, data_addr, data_write: std_logic_vector(31 DOWNTO 0);
+	SIGNAL instr_addr	: word;		-- instuction address
+	SIGNAL data_addr	: word;		-- data address
+	SIGNAL data_write	: word;		-- data to write
+	SIGNAL data_rw		: std_logic;	-- data read / write
+
+	SIGNAL data		: word;		-- data
+
+	SIGNAL instr		: word;		-- instruction
 
 BEGIN
 	cpu: ENTITY work.cpu PORT MAP (
