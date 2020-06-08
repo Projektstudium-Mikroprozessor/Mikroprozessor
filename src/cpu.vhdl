@@ -2,27 +2,46 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.ALL;
 USE ieee.numeric_std.ALL;
+USE work.definitions.ALL;
 
 ENTITY cpu IS
 	PORT (
 		-- control signals
-		clk, rst: IN std_logic;
+		clk		: IN std_logic;		-- clock
+		rst		: IN std_logic; 	-- reset
 
 		-- inputs
-		instr, data: IN std_logic_vector(31 DOWNTO 0);
+		instr		: IN word;		-- instruction
+		data		: IN word;		-- data input
 
 		-- outputs
-		instr_addr, data_addr, data_out: OUT std_logic_vector(31 DOWNTO 0);
-		data_rw: OUT std_logic
+		instr_addr	: OUT word;		-- instuction address
+		data_addr	: OUT word;		-- data address
+		data_out	: OUT word;		-- data output
+		data_rw		: OUT std_logic		-- data read / write
 	);
 END cpu;
 
 ARCHITECTURE structural OF cpu IS
 
-	SIGNAL branch_zero, zero, reg_rw, mem_res, reg_imm, a_inv, b_neg: std_logic;
-	SIGNAL reg_1, reg_2, imm, res, offset: std_logic_vector(31 DOWNTO 0);
-	SIGNAL cntrl_op: std_logic_vector(1 DOWNTO 0);
-	SIGNAL op: std_logic_vector(2 DOWNTO 0);
+	SIGNAL reg_1		: word;			-- first register data
+	SIGNAL reg_2		: word;			-- second register data
+
+	SIGNAL res		: word;			-- result
+	SIGNAL zero		: std_logic;		-- zero flag (res == 0)
+
+
+	SIGNAL branch_zero	: std_logic;		-- branch if zero
+	SIGNAL reg_rw		: std_logic;		-- registers read / write
+	SIGNAL mem_res		: std_logic;		-- write memory / result
+	SIGNAL reg_imm		: std_logic;		-- 3-register instruction / 2-register & immediate
+	SIGNAL cntrl_op		: basic_operation;	-- control operation
+	SIGNAL mem_rw		: std_logic;		-- memory read / write
+
+	SIGNAL op 		: operation;		-- operation
+
+	SIGNAL imm		: word;			-- immediate value
+	SIGNAL offset		: word;			-- branch offset
 
 BEGIN
 	pc: ENTITY work.program_counter PORT MAP (
@@ -56,8 +75,6 @@ BEGIN
 		res => res,
 		op => op,
 		reg_imm => reg_imm,
-		a_inv => a_inv,
-		b_neg => b_neg,
 		zero => zero
 	);
 
@@ -67,20 +84,19 @@ BEGIN
 		reg_rw => reg_rw,
 		mem_res => mem_res,
 		reg_imm => reg_imm,
-		op => cntrl_op,
+		cntrl_op => cntrl_op,
 		mem_rw => data_rw
 	);
 
 	alu_cntrl: ENTITY work.alu_control PORT MAP (
 		cntrl_op => cntrl_op,
 		func => instr(3 DOWNTO 0),
-		op => op,
-		a_inv => a_inv,
-		b_neg => b_neg
+		op => op
 	);
 
-	imm <= std_logic_vector(resize(signed(instr(15 DOWNTO 0)), imm'length));
-	offset <= std_logic_vector(resize(signed(instr(15 DOWNTO 0)), offset'length));
-	data_addr <= res;
-	data_out <= reg_2;
+	imm <= std_logic_vector(resize(signed(instr(15 DOWNTO 0)), imm'length));	-- immediate
+	offset <= std_logic_vector(resize(signed(instr(15 DOWNTO 0)), offset'length));	-- branch offset
+
+	data_addr <= res;								-- data address
+	data_out <= reg_2;								-- data output
 END structural;
