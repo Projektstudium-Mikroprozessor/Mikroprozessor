@@ -10,16 +10,16 @@ ARCHITECTURE testbench OF testbench IS
 
 	CONSTANT speed	: time := 100 ps;	-- clock speed
 
-	SIGNAL clk	: std_logic := '0';	-- clock
-	SIGNAL rst	: std_logic := '1';	-- reset
+	SIGNAL clock	: std_logic := '0';	-- clock
+	SIGNAL reset	: std_logic := '1';	-- reset
 
 BEGIN
-	clk <= NOT clk AFTER speed;		-- generate clock signal
-	rst <= '0' AFTER (1.5 * speed);	-- reset on startup
+	clock <= NOT clock AFTER speed;		-- generate clock signal
+	reset <= '0' AFTER (1.5 * speed);	-- reset on startup
 
 	uc: ENTITY work.ucontroller PORT MAP (
-		clk => clk,
-		rst => rst
+		clock => clock,
+		reset => reset
 	);
 
 	PROCESS

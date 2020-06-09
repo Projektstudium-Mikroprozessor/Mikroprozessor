@@ -20,7 +20,7 @@ BEGIN
 		
 		TYPE memory_bank IS ARRAY(0 TO 0) OF word; 		-- memory bank, max length 2**30 (4 * 1GB)
 		VARIABLE values	: memory_bank := (			-- memory values
-			OTHERS => (OTHERS => '1')
+			OTHERS => (OTHERS => '0')
 		);
 
 	BEGIN

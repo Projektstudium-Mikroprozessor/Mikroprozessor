@@ -7,7 +7,7 @@ USE work.definitions.ALL;
 ENTITY registers IS
 	PORT (
 		-- control signals
-		clk		: IN std_logic;	-- clock
+		clock		: IN std_logic;	-- clock
 		rw		: IN std_logic;	-- read / write
 		mem_res 	: IN std_logic;	-- write input (data_mem / data_res)
 		reg_imm 	: IN std_logic;	-- write address (write_reg / write_imm)
@@ -28,7 +28,7 @@ END registers;
 
 ARCHITECTURE behavioural OF registers IS
 BEGIN
-	PROCESS (clk, read_1, read_2)
+	PROCESS (clock, read_1, read_2)
 
 		SUBTYPE writecntrl IS std_logic_vector(1 DOWNTO 0);						-- write control
 
@@ -36,7 +36,7 @@ BEGIN
 		VARIABLE values: register_bank;									-- register values
 
 	BEGIN
-		IF clk'event AND clk = '1' THEN
+		IF clock'event AND clock = '1' THEN
 			IF rw = '1' THEN
 				CASE writecntrl'(reg_imm & mem_res) IS
 					WHEN "00" => values(to_integer(unsigned(write_reg))) := data_mem;	-- 3-register-instruction, data from memory

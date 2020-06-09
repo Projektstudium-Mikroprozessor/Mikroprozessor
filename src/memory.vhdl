@@ -7,7 +7,7 @@ USE work.definitions.ALL;
 ENTITY memory IS
 	PORT (
 		-- control signals
-		clk	: IN std_logic;	-- clock
+		clock	: IN std_logic;	-- clock
 		rw	: IN std_logic; -- read / write
 
 		-- inputs
@@ -21,13 +21,13 @@ END memory;
 
 ARCHITECTURE behavioural OF memory IS
 BEGIN
-	PROCESS (clk, addr)
+	PROCESS (clock, addr)
 
 		TYPE memory_bank IS ARRAY(0 TO 2**20-1) OF word;	-- memory bank, max length 2**30 (4 * 1GB)
 		VARIABLE values	: memory_bank; 				-- memory values
 
 	BEGIN
-		IF clk'event AND clk = '1' THEN
+		IF clock'event AND clock = '1' THEN
 			IF rw = '1' THEN
 				values(to_integer(unsigned(addr) mod (4 * values'length) / 4)) := data_in;	-- write data input to address
 			END IF;

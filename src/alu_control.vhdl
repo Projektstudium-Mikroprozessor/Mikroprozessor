@@ -8,7 +8,7 @@ ENTITY alu_control IS
 	PORT (
 		-- inputs
 		cntrl_op	: IN basic_operation;			-- control operation
-		func		: IN std_logic_vector(3 DOWNTO 0);	-- function specifier
+		func		: IN func_specifier;	-- function specifier
 		
 		-- outputs
 		op 		: OUT operation				-- operation
