@@ -22,20 +22,20 @@ END program_counter;
 
 ARCHITECTURE behavioural OF program_counter IS 
 BEGIN
-	PROCESS (clk)
+	PROCESS (clk, rst)
 
 		VARIABLE val: integer;						-- Internal value
 
 	BEGIN
-		IF (rst = '1') THEN						-- Reset to first instruction
+		IF rst = '1' THEN						-- Reset to first instruction
 			val := 0; 
-		ELSE 								-- Advance to next instruction
-			val := val + 4;
-			IF (branch_zero = '1' AND zero = '1') THEN		-- Branch to new relative address
-				val := val + to_integer(signed(offset) * 4); 
+		ELSIF clk'event AND clk = '1' THEN			
+			val := val + 4;						-- Advance to next instruction
+			IF branch_zero = '1' AND zero = '1' THEN
+				val := val + to_integer(signed(offset) * 4);	-- Branch to new relative address
 			END IF;
 		END IF;
-				
+
 		addr <= std_logic_vector(to_signed(val, addr'length)); 		-- Output internal value
 	END PROCESS;
 END behavioural;

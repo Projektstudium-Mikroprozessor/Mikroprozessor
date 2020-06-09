@@ -8,11 +8,14 @@ END testbench;
 
 ARCHITECTURE testbench OF testbench IS
 
+	CONSTANT speed	: time := 100 ps;	-- clock speed
+
 	SIGNAL clk	: std_logic := '0';	-- clock
-	SIGNAL rst	: std_logic := '0';	-- reset
+	SIGNAL rst	: std_logic := '1';	-- reset
 
 BEGIN
-	clk <= NOT clk AFTER 200 ps;		-- generate clock signal
+	clk <= NOT clk AFTER speed;		-- generate clock signal
+	rst <= '0' AFTER (1.5 * speed);	-- reset on startup
 
 	uc: ENTITY work.ucontroller PORT MAP (
 		clk => clk,
@@ -21,11 +24,7 @@ BEGIN
 
 	PROCESS
 	BEGIN
-		WAIT FOR 150 ps;
-		rst <= '1';			-- reset on first edge
-		WAIT FOR 100 ps;		
-		rst <='0';
-		WAIT FOR 100 * 200 ps;		-- run for 200 cycles
+		WAIT FOR 200 * (2 * speed);	-- run for 200 cycles
 		std.env.stop;			-- stop simulation
 	END PROCESS;
 END testbench;
