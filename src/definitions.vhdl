@@ -14,6 +14,9 @@ PACKAGE definitions IS
 	-- basic ops: 00 address calc, 01 compare, 10 alu ops
 	SUBTYPE basic_operation IS std_logic_vector(1 DOWNTO 0);
 
+	-- function specifier
+	SUBTYPE func_specifier IS std_logic_vector(3 DOWNTO 0);
+
 	-- alu op (3 bits), invert first operand, negate second operand
 	-- alu ops : 000 and, 001 or, 010 add, 100 shl, 110, slr, 111 sar
 	SUBTYPE operation IS std_logic_vector(4 DOWNTO 0);
