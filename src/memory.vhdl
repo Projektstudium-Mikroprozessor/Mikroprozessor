@@ -27,10 +27,12 @@ BEGIN
 		VARIABLE values	: memory_bank; 				-- memory values
 
 	BEGIN
-		IF (clk'event AND rw = '1') THEN
-			values(to_integer(unsigned(addr) mod (4 * values'length) / 4)) := data_in;	-- write data input to address
+		IF clk'event AND clk = '1' THEN
+			IF rw = '1' THEN
+				values(to_integer(unsigned(addr) mod (4 * values'length) / 4)) := data_in;	-- write data input to address
+			END IF;
 		END IF;
 		
-		data <= values(to_integer(unsigned(addr) mod (4 * values'length) / 4));			-- read from address to data output
+		data <= values(to_integer(unsigned(addr) mod (4 * values'length) / 4));				-- read from address to data output
 	END PROCESS;
 END behavioural;
