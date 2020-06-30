@@ -48,7 +48,16 @@ BEGIN
 			END IF;
 		END IF;
 
-		data_1 <= (OTHERS => '0') WHEN read_1 = 0 ELSE values(to_integer(unsigned(read_1)));		-- first register
-		data_2 <= (OTHERS => '0') WHEN read_2 = 0 ELSE values(to_integer(unsigned(read_2)));		-- second register
+		CASE to_integer(unsigned(read_1)) IS								-- first register
+			WHEN 30 => data_1 <= (OTHERS => '0');
+			WHEN 31 => data_1 <= (0 => '1', OTHERS => '0');
+			WHEN OTHERS => data_1 <= values(to_integer(unsigned(read_1)));
+		END CASE;
+
+		CASE to_integer(unsigned(read_2)) IS								-- second register
+			WHEN 30 => data_2 <= (OTHERS => '0');
+			WHEN 31 => data_2 <= (0 => '1', OTHERS => '0');
+			WHEN OTHERS => data_2 <= values(to_integer(unsigned(read_2)));
+		END CASE;	
 	END PROCESS;
 END behavioural;
