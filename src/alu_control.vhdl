@@ -8,7 +8,7 @@ ENTITY alu_control IS
 	PORT (
 		-- inputs
 		cntrl_op	: IN basic_operation;			-- control operation
-		func		: IN func_specifier;	-- function specifier
+		func		: IN func_specifier;			-- function specifier
 		
 		-- outputs
 		op 		: OUT operation				-- operation
@@ -31,7 +31,7 @@ BEGIN
 					WHEN "1011" => op <= "00111";	-- nand
 					WHEN "1010" => op <= "00011";	-- nor
 					WHEN "1100" => op <= "10000";	-- shl
-					WHEN "1110" => op <= "11000";	-- shr
+					WHEN "1110" => op <= "11000";	-- slr
 					WHEN "1111" => op <= "11100";	-- sar
 					WHEN OTHERS => op <= (OTHERS => '1');
 				END CASE;
